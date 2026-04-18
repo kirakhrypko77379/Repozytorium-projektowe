@@ -77,3 +77,96 @@ contactForm.addEventListener("submit", function(e) {
         }, 5000);
     }
 });
+
+
+async function loadCVData() {
+    try {
+        const response = await fetch('data.json');
+        if (!response.ok) throw new Error("Nie znaleziono pliku JSON");
+        
+        const data = await response.json();
+        console.log("Dane z JSON:", data); 
+
+        const skillsList = document.getElementById('skillsList');
+        if (skillsList) {
+            skillsList.innerHTML = ""; 
+            data.umiejetnosci.forEach(skill => {
+                const li = document.createElement('li');
+                li.textContent = skill;
+                skillsList.appendChild(li);
+            });
+        }
+
+        const projectsContainer = document.getElementById('projectsContainer');
+        if (projectsContainer) {
+            projectsContainer.innerHTML = ""; 
+            data.projekty.forEach(proj => {
+                const article = document.createElement('article');
+                article.innerHTML = `
+                    <strong>${proj.tytul}</strong>
+                    <p>${proj.opis}</p>
+                `;
+                projectsContainer.appendChild(article);
+            });
+        }
+    } catch (error) {
+        console.error("Błąd ładowania:", error);
+    }
+}
+
+loadCVData();
+
+
+const inputNotatki = document.getElementById('inputNotatki');
+const btnDodajNotatke = document.getElementById('btnDodajNotatke');
+const listaNotatek = document.getElementById('listaNotatek');
+
+
+function wyswietlNotatki() {
+    
+    const zapisaneNotatki = JSON.parse(localStorage.getItem('mojeNotatki')) || [];
+    
+   
+    listaNotatek.innerHTML = '';
+
+  
+    zapisaneNotatki.forEach((tresc, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span>${tresc}</span>
+            <button class="btn-usun" onclick="usunNotatke(${index})">Usuń</button>
+        `;
+        listaNotatek.appendChild(li);
+    });
+}
+
+btnDodajNotatke.addEventListener('click', () => {
+    const nowaTresc = inputNotatki.value.trim();
+
+    if (nowaTresc !== "") {
+        const zapisaneNotatki = JSON.parse(localStorage.getItem('mojeNotatki')) || [];
+        
+        
+        zapisaneNotatki.push(nowaTresc);
+        
+        
+        localStorage.setItem('mojeNotatki', JSON.stringify(zapisaneNotatki));
+        
+    
+        inputNotatki.value = "";
+        wyswietlNotatki();
+    }
+});
+
+function usunNotatke(index) {
+    let zapisaneNotatki = JSON.parse(localStorage.getItem('mojeNotatki')) || [];
+    
+    zapisaneNotatki.splice(index, 1);
+    
+    localStorage.setItem('mojeNotatki', JSON.stringify(zapisaneNotatki));
+    
+
+    wyswietlNotatki();
+}
+
+wyswietlNotatki();

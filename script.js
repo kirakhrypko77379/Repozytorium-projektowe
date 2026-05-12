@@ -170,3 +170,33 @@ function usunNotatke(index) {
 }
 
 wyswietlNotatki();
+
+
+const mojFormularz = document.getElementById('contactForm');
+const komunikatSukcesu = document.getElementById('successMsg');
+
+mojFormularz.addEventListener('submit', async (e) => {
+    e.preventDefault(); 
+
+    const daneDoWyslania = new FormData(mojFormularz);
+
+    try {
+        const odpowiedz = await fetch(mojFormularz.action, {
+            method: 'POST',
+            body: daneDoWyslania,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (odpowiedz.ok) {
+            komunikatSukcesu.style.display = 'block';
+            mojFormularz.reset();
+        } else {
+            alert("Błąd serwera. Spróbuj ponownie.");
+        }
+    } catch (error) {
+        console.error("Błąd sieci:", error);
+        alert("Błąd połączenia z serwerem.");
+    }
+});

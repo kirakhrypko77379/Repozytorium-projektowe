@@ -77,8 +77,10 @@
    <section id="kontakt-formularz">
     <h2>Skontaktuj się ze mną</h2>
     <p>Wypełnij formularz aby wysłać wiadomość</p>
+    
     <div class="form-wrapper">
-        <form id="contactForm" novalidate>
+        <form id="contactForm" action="https://formspree.io/f/meennqqn" method="POST" novalidate>
+            
             <div class="form-group">
                 <label for="firstName">Imię:</label>
                 <input type="text" id="firstName" name="firstName">
@@ -104,6 +106,7 @@
             </div>
 
             <button type="submit">Wyślij wiadomość</button>
+            
             <p id="successMsg" style="color: green; display: none; font-weight: bold; margin-top: 10px;">
                 Wiadomość została wysłana pomyślnie!
             </p>
